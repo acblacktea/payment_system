@@ -8,8 +8,8 @@ import (
 
 	payment_gateway "github.com/acblacktea/payment_system/payment_gateway/biz/model/acblacktea/payment_system/payment_gateway"
 	"github.com/acblacktea/payment_system/payment_gateway/biz/model/base"
-	"github.com/acblacktea/payment_system/payment_system/kitex_gen/acblacktea/payment_system/payment_system"
-	"github.com/acblacktea/payment_system/payment_system/kitex_gen/acblacktea/payment_system/payment_system/paymentsystem"
+	"github.com/acblacktea/payment_system/payment_gateway/kitex_gen/acblacktea/payment_system/payment_system"
+	"github.com/acblacktea/payment_system/payment_gateway/kitex_gen/acblacktea/payment_system/payment_system/paymentsystem"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	client2 "github.com/cloudwego/kitex/client"

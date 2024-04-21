@@ -76,12 +76,7 @@ func (r *WalletRepoImpl) SubmitTransaction(ctx context.Context, params SubmitTra
 }
 
 func (r *WalletRepoImpl) updateAccount(ctx context.Context, accountID, balance int64, tx *gorm.DB) error {
-	account := model.Wallet{
-		ID:      accountID,
-		Balance: balance,
-	}
-
-	tx = tx.Model(&account).Where("id = ?", accountID).Updates(map[string]interface{}{
+	tx = tx.Table(model.WalletTableName).Where("id = ?", accountID).Updates(map[string]interface{}{
 		"balance": balance,
 	})
 

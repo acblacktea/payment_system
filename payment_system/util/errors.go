@@ -13,7 +13,7 @@ var (
 	ErrInvalidRequest       = errors.New("invalid request, please check")
 )
 
-// status code
+// status code, should refinement
 var (
 	InternalErrCode int32 = 500
 	SuccessCode     int32 = 200

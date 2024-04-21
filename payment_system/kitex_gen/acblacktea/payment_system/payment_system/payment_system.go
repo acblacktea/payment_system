@@ -5,241 +5,15 @@ package payment_system
 import (
 	"context"
 	"fmt"
+	"github.com/acblacktea/payment_system/payment_system/kitex_gen/base"
 	"github.com/apache/thrift/lib/go/thrift"
 	"strings"
 )
 
-type BaseResp struct {
-	StatusMessage string `thrift:"StatusMessage,1" frugal:"1,default,string" json:"StatusMessage"`
-	StatusCode    int32  `thrift:"StatusCode,2" frugal:"2,default,i32" json:"StatusCode"`
-}
-
-func NewBaseResp() *BaseResp {
-	return &BaseResp{
-
-		StatusMessage: "",
-		StatusCode:    0,
-	}
-}
-
-func (p *BaseResp) InitDefault() {
-	*p = BaseResp{
-
-		StatusMessage: "",
-		StatusCode:    0,
-	}
-}
-
-func (p *BaseResp) GetStatusMessage() (v string) {
-	return p.StatusMessage
-}
-
-func (p *BaseResp) GetStatusCode() (v int32) {
-	return p.StatusCode
-}
-func (p *BaseResp) SetStatusMessage(val string) {
-	p.StatusMessage = val
-}
-func (p *BaseResp) SetStatusCode(val int32) {
-	p.StatusCode = val
-}
-
-var fieldIDToName_BaseResp = map[int16]string{
-	1: "StatusMessage",
-	2: "StatusCode",
-}
-
-func (p *BaseResp) Read(iprot thrift.TProtocol) (err error) {
-
-	var fieldTypeId thrift.TType
-	var fieldId int16
-
-	if _, err = iprot.ReadStructBegin(); err != nil {
-		goto ReadStructBeginError
-	}
-
-	for {
-		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
-		if err != nil {
-			goto ReadFieldBeginError
-		}
-		if fieldTypeId == thrift.STOP {
-			break
-		}
-
-		switch fieldId {
-		case 1:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField1(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 2:
-			if fieldTypeId == thrift.I32 {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		default:
-			if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		}
-		if err = iprot.ReadFieldEnd(); err != nil {
-			goto ReadFieldEndError
-		}
-	}
-	if err = iprot.ReadStructEnd(); err != nil {
-		goto ReadStructEndError
-	}
-
-	return nil
-ReadStructBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
-ReadFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_BaseResp[fieldId]), err)
-SkipFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
-
-ReadFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
-ReadStructEndError:
-	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
-}
-
-func (p *BaseResp) ReadField1(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.StatusMessage = v
-	}
-	return nil
-}
-func (p *BaseResp) ReadField2(iprot thrift.TProtocol) error {
-
-	if v, err := iprot.ReadI32(); err != nil {
-		return err
-	} else {
-		p.StatusCode = v
-	}
-	return nil
-}
-
-func (p *BaseResp) Write(oprot thrift.TProtocol) (err error) {
-	var fieldId int16
-	if err = oprot.WriteStructBegin("BaseResp"); err != nil {
-		goto WriteStructBeginError
-	}
-	if p != nil {
-		if err = p.writeField1(oprot); err != nil {
-			fieldId = 1
-			goto WriteFieldError
-		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
-			goto WriteFieldError
-		}
-	}
-	if err = oprot.WriteFieldStop(); err != nil {
-		goto WriteFieldStopError
-	}
-	if err = oprot.WriteStructEnd(); err != nil {
-		goto WriteStructEndError
-	}
-	return nil
-WriteStructBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
-WriteFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
-WriteFieldStopError:
-	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
-WriteStructEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
-}
-
-func (p *BaseResp) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("StatusMessage", thrift.STRING, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.StatusMessage); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
-}
-
-func (p *BaseResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("StatusCode", thrift.I32, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI32(p.StatusCode); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-
-func (p *BaseResp) String() string {
-	if p == nil {
-		return "<nil>"
-	}
-	return fmt.Sprintf("BaseResp(%+v)", *p)
-
-}
-
-func (p *BaseResp) DeepEqual(ano *BaseResp) bool {
-	if p == ano {
-		return true
-	} else if p == nil || ano == nil {
-		return false
-	}
-	if !p.Field1DeepEqual(ano.StatusMessage) {
-		return false
-	}
-	if !p.Field2DeepEqual(ano.StatusCode) {
-		return false
-	}
-	return true
-}
-
-func (p *BaseResp) Field1DeepEqual(src string) bool {
-
-	if strings.Compare(p.StatusMessage, src) != 0 {
-		return false
-	}
-	return true
-}
-func (p *BaseResp) Field2DeepEqual(src int32) bool {
-
-	if p.StatusCode != src {
-		return false
-	}
-	return true
-}
-
 type Account struct {
 	AccountID int64   `thrift:"AccountID,1,required" frugal:"1,required,i64" json:"AccountID"`
 	Balance   float64 `thrift:"Balance,2,required" frugal:"2,required,double" json:"Balance"`
-	Currency  string  `thrift:"currency,3,required" frugal:"3,required,string" json:"currency"`
+	Currency  string  `thrift:"Currency,3,required" frugal:"3,required,string" json:"Currency"`
 }
 
 func NewAccount() *Account {
@@ -274,7 +48,7 @@ func (p *Account) SetCurrency(val string) {
 var fieldIDToName_Account = map[int16]string{
 	1: "AccountID",
 	2: "Balance",
-	3: "currency",
+	3: "Currency",
 }
 
 func (p *Account) Read(iprot thrift.TProtocol) (err error) {
@@ -470,7 +244,7 @@ WriteFieldEndError:
 }
 
 func (p *Account) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("currency", thrift.STRING, 3); err != nil {
+	if err = oprot.WriteFieldBegin("Currency", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.Currency); err != nil {
@@ -712,7 +486,7 @@ func (p *CreateAccountRequest) Field1DeepEqual(src *Account) bool {
 }
 
 type CreateAccountResponse struct {
-	BaseResp *BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,BaseResp" json:"BaseResp"`
+	BaseResp *base.BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,base.BaseResp" json:"BaseResp"`
 }
 
 func NewCreateAccountResponse() *CreateAccountResponse {
@@ -723,15 +497,15 @@ func (p *CreateAccountResponse) InitDefault() {
 	*p = CreateAccountResponse{}
 }
 
-var CreateAccountResponse_BaseResp_DEFAULT *BaseResp
+var CreateAccountResponse_BaseResp_DEFAULT *base.BaseResp
 
-func (p *CreateAccountResponse) GetBaseResp() (v *BaseResp) {
+func (p *CreateAccountResponse) GetBaseResp() (v *base.BaseResp) {
 	if !p.IsSetBaseResp() {
 		return CreateAccountResponse_BaseResp_DEFAULT
 	}
 	return p.BaseResp
 }
-func (p *CreateAccountResponse) SetBaseResp(val *BaseResp) {
+func (p *CreateAccountResponse) SetBaseResp(val *base.BaseResp) {
 	p.BaseResp = val
 }
 
@@ -808,7 +582,7 @@ RequiredFieldNotSetError:
 }
 
 func (p *CreateAccountResponse) ReadField255(iprot thrift.TProtocol) error {
-	p.BaseResp = NewBaseResp()
+	p.BaseResp = base.NewBaseResp()
 	if err := p.BaseResp.Read(iprot); err != nil {
 		return err
 	}
@@ -880,7 +654,7 @@ func (p *CreateAccountResponse) DeepEqual(ano *CreateAccountResponse) bool {
 	return true
 }
 
-func (p *CreateAccountResponse) Field255DeepEqual(src *BaseResp) bool {
+func (p *CreateAccountResponse) Field255DeepEqual(src *base.BaseResp) bool {
 
 	if !p.BaseResp.DeepEqual(src) {
 		return false
@@ -1059,8 +833,8 @@ func (p *GetAccountRequest) Field1DeepEqual(src int64) bool {
 }
 
 type GetAccountResponse struct {
-	Account  *Account  `thrift:"Account,1,required" frugal:"1,required,Account" json:"Account"`
-	BaseResp *BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,BaseResp" json:"BaseResp"`
+	Account  *Account       `thrift:"Account,1,required" frugal:"1,required,Account" json:"Account"`
+	BaseResp *base.BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,base.BaseResp" json:"BaseResp"`
 }
 
 func NewGetAccountResponse() *GetAccountResponse {
@@ -1080,9 +854,9 @@ func (p *GetAccountResponse) GetAccount() (v *Account) {
 	return p.Account
 }
 
-var GetAccountResponse_BaseResp_DEFAULT *BaseResp
+var GetAccountResponse_BaseResp_DEFAULT *base.BaseResp
 
-func (p *GetAccountResponse) GetBaseResp() (v *BaseResp) {
+func (p *GetAccountResponse) GetBaseResp() (v *base.BaseResp) {
 	if !p.IsSetBaseResp() {
 		return GetAccountResponse_BaseResp_DEFAULT
 	}
@@ -1091,7 +865,7 @@ func (p *GetAccountResponse) GetBaseResp() (v *BaseResp) {
 func (p *GetAccountResponse) SetAccount(val *Account) {
 	p.Account = val
 }
-func (p *GetAccountResponse) SetBaseResp(val *BaseResp) {
+func (p *GetAccountResponse) SetBaseResp(val *base.BaseResp) {
 	p.BaseResp = val
 }
 
@@ -1195,7 +969,7 @@ func (p *GetAccountResponse) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *GetAccountResponse) ReadField255(iprot thrift.TProtocol) error {
-	p.BaseResp = NewBaseResp()
+	p.BaseResp = base.NewBaseResp()
 	if err := p.BaseResp.Read(iprot); err != nil {
 		return err
 	}
@@ -1298,7 +1072,7 @@ func (p *GetAccountResponse) Field1DeepEqual(src *Account) bool {
 	}
 	return true
 }
-func (p *GetAccountResponse) Field255DeepEqual(src *BaseResp) bool {
+func (p *GetAccountResponse) Field255DeepEqual(src *base.BaseResp) bool {
 
 	if !p.BaseResp.DeepEqual(src) {
 		return false
@@ -1605,7 +1379,7 @@ func (p *SubimitTransactionRequest) Field3DeepEqual(src float64) bool {
 }
 
 type SubimitTransactionResponse struct {
-	BaseResp *BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,BaseResp" json:"BaseResp"`
+	BaseResp *base.BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,base.BaseResp" json:"BaseResp"`
 }
 
 func NewSubimitTransactionResponse() *SubimitTransactionResponse {
@@ -1616,15 +1390,15 @@ func (p *SubimitTransactionResponse) InitDefault() {
 	*p = SubimitTransactionResponse{}
 }
 
-var SubimitTransactionResponse_BaseResp_DEFAULT *BaseResp
+var SubimitTransactionResponse_BaseResp_DEFAULT *base.BaseResp
 
-func (p *SubimitTransactionResponse) GetBaseResp() (v *BaseResp) {
+func (p *SubimitTransactionResponse) GetBaseResp() (v *base.BaseResp) {
 	if !p.IsSetBaseResp() {
 		return SubimitTransactionResponse_BaseResp_DEFAULT
 	}
 	return p.BaseResp
 }
-func (p *SubimitTransactionResponse) SetBaseResp(val *BaseResp) {
+func (p *SubimitTransactionResponse) SetBaseResp(val *base.BaseResp) {
 	p.BaseResp = val
 }
 
@@ -1701,7 +1475,7 @@ RequiredFieldNotSetError:
 }
 
 func (p *SubimitTransactionResponse) ReadField255(iprot thrift.TProtocol) error {
-	p.BaseResp = NewBaseResp()
+	p.BaseResp = base.NewBaseResp()
 	if err := p.BaseResp.Read(iprot); err != nil {
 		return err
 	}
@@ -1773,7 +1547,7 @@ func (p *SubimitTransactionResponse) DeepEqual(ano *SubimitTransactionResponse) 
 	return true
 }
 
-func (p *SubimitTransactionResponse) Field255DeepEqual(src *BaseResp) bool {
+func (p *SubimitTransactionResponse) Field255DeepEqual(src *base.BaseResp) bool {
 
 	if !p.BaseResp.DeepEqual(src) {
 		return false

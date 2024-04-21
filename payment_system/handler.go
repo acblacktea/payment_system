@@ -8,7 +8,7 @@ import (
 	"github.com/acblacktea/payment_system/payment_system/util"
 )
 
-// PaymentSystemImpl implements the last service interface defined in the IDL.
+// PaymentSystemImpl implements the last service interface defined in the idl.
 type PaymentSystemImpl struct {
 	PaymentSystemService payment_system_service.PaymentSystemService
 }

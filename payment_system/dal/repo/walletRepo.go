@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/acblacktea/payment_system/payment_system/dal/model"
@@ -32,12 +33,15 @@ func (r *WalletRepoImpl) CreateAccount(ctx context.Context, accountID, initBalan
 		Currency: currency,
 	}
 
+	fmt.Printf("%v\n", user)
+	fmt.Printf("%v\n", r.dbClient)
+	fmt.Printf("%v\n", r.dbClient.Table(model.WalletTableName))
 	return r.dbClient.Table(model.WalletTableName).Create(user).Error
 }
 
 func (r *WalletRepoImpl) GetAccounts(ctx context.Context, accountIDs []int64) ([]*model.Wallet, error) {
 	wallets := make([]*model.Wallet, len(accountIDs))
-	result := r.dbClient.Table(model.WalletTableName).Where("id in ", accountIDs).Find(&wallets)
+	result := r.dbClient.Table(model.WalletTableName).Where("id in ?", accountIDs).Find(&wallets)
 	return wallets, result.Error
 }
 

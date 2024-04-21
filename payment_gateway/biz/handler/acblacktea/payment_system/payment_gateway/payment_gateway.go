@@ -4,11 +4,12 @@ package payment_gateway
 
 import (
 	"context"
+	"fmt"
 
 	payment_gateway "github.com/acblacktea/payment_system/payment_gateway/biz/model/acblacktea/payment_system/payment_gateway"
 	"github.com/acblacktea/payment_system/payment_gateway/biz/model/base"
-	"github.com/acblacktea/payment_system/payment_gateway/kitex_gen/acblacktea/payment_system/payment_system"
-	"github.com/acblacktea/payment_system/payment_gateway/kitex_gen/acblacktea/payment_system/payment_system/paymentsystem"
+	"github.com/acblacktea/payment_system/payment_system/kitex_gen/acblacktea/payment_system/payment_system"
+	"github.com/acblacktea/payment_system/payment_system/kitex_gen/acblacktea/payment_system/payment_system/paymentsystem"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	client2 "github.com/cloudwego/kitex/client"
@@ -36,7 +37,7 @@ func CreateAccount(ctx context.Context, c *app.RequestContext) { //ignore_securi
 		return
 	}
 
-	rpc_resp, err := client.CreateAccount(ctx, &payment_system.CreateAccountRequest{
+	rpcResp, err := client.CreateAccount(ctx, &payment_system.CreateAccountRequest{
 		Account: &payment_system.Account{
 			AccountID: req.AccountID,
 			Balance:   req.Balance,
@@ -50,10 +51,14 @@ func CreateAccount(ctx context.Context, c *app.RequestContext) { //ignore_securi
 		stats = consts.StatusInternalServerError
 	}
 
-	if rpc_resp != nil && rpc_resp.BaseResp != nil {
+	if rpcResp != nil && rpcResp.BaseResp != nil {
 		resp.BaseResp = &base.BaseResp{
-			StatusMessage: rpc_resp.BaseResp.StatusMessage,
-			StatusCode:    rpc_resp.BaseResp.StatusCode,
+			StatusMessage: rpcResp.BaseResp.StatusMessage,
+			StatusCode:    rpcResp.BaseResp.StatusCode,
+		}
+
+		if rpcResp.BaseResp.StatusCode != 200 {
+			stats = consts.StatusInternalServerError
 		}
 	}
 
@@ -71,7 +76,9 @@ func GetAccount(ctx context.Context, c *app.RequestContext) { //ignore_security_
 		return
 	}
 
-	rpc_resp, err := client.GetAccount(ctx, &payment_system.GetAccountRequest{
+	fmt.Printf("%d\n", req.AccountID)
+
+	rpcResp, err := client.GetAccount(ctx, &payment_system.GetAccountRequest{
 		AccountID: req.AccountID,
 	})
 
@@ -81,18 +88,24 @@ func GetAccount(ctx context.Context, c *app.RequestContext) { //ignore_security_
 		stats = consts.StatusInternalServerError
 	}
 
-	if rpc_resp != nil && rpc_resp.BaseResp != nil {
+	fmt.Printf("%v", resp)
+	fmt.Printf("%v", rpcResp.BaseResp)
+	if rpcResp != nil && rpcResp.BaseResp != nil {
 		resp.BaseResp = &base.BaseResp{
-			StatusMessage: rpc_resp.BaseResp.StatusMessage,
-			StatusCode:    rpc_resp.BaseResp.StatusCode,
+			StatusMessage: rpcResp.BaseResp.StatusMessage,
+			StatusCode:    rpcResp.BaseResp.StatusCode,
+		}
+
+		if rpcResp.BaseResp.StatusCode != 200 {
+			stats = consts.StatusInternalServerError
 		}
 	}
 
-	if rpc_resp.Account != nil {
+	if rpcResp != nil && rpcResp.Account != nil {
 		resp.Account = &payment_gateway.Account{
-			AccountID: rpc_resp.Account.AccountID,
-			Balance:   rpc_resp.Account.Balance,
-			Currency:  rpc_resp.Account.Currency,
+			AccountID: rpcResp.Account.AccountID,
+			Balance:   rpcResp.Account.Balance,
+			Currency:  rpcResp.Account.Currency,
 		}
 	}
 
@@ -110,7 +123,7 @@ func SubmitTransaction(ctx context.Context, c *app.RequestContext) { //ignore_se
 		return
 	}
 
-	rpc_resp, err := client.SubmitTransaction(ctx, &payment_system.SubimitTransactionRequest{
+	rpcResp, err := client.SubmitTransaction(ctx, &payment_system.SubimitTransactionRequest{
 		DestinationAccountID: req.DestinationAccountID,
 		SourceAccountID:      req.SourceAccountID,
 		Amount:               req.Amount,
@@ -122,10 +135,14 @@ func SubmitTransaction(ctx context.Context, c *app.RequestContext) { //ignore_se
 		stats = consts.StatusInternalServerError
 	}
 
-	if rpc_resp != nil && rpc_resp.BaseResp != nil {
+	if rpcResp != nil && rpcResp.BaseResp != nil {
 		resp.BaseResp = &base.BaseResp{
-			StatusMessage: rpc_resp.BaseResp.StatusMessage,
-			StatusCode:    rpc_resp.BaseResp.StatusCode,
+			StatusMessage: rpcResp.BaseResp.StatusMessage,
+			StatusCode:    rpcResp.BaseResp.StatusCode,
+		}
+
+		if rpcResp.BaseResp.StatusCode != 200 {
+			stats = consts.StatusInternalServerError
 		}
 	}
 

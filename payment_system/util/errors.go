@@ -17,8 +17,9 @@ var (
 var (
 	InternalErrCode int32 = 500
 	SuccessCode     int32 = 200
+	InvalidArgument int32 = 400
 )
 
 const (
-	GormExistItem = "xxxx"
+	GormExistItem = "Duplicate entry"
 )

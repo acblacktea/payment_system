@@ -19,7 +19,7 @@ func (s *WalletServiceImpl) CreateAccount(ctx context.Context, accountID int64, 
 	}
 
 	err = s.WalletRepo.CreateAccount(ctx, accountID, balance, currency)
-	if strings.Contains(err.Error(), util.GormExistItem) {
+	if err != nil && strings.Contains(err.Error(), util.GormExistItem) {
 		return fmt.Errorf("%w: id %d", util.ErrDuplicateAccountID, accountID)
 	}
 

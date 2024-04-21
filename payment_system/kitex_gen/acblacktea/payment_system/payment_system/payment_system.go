@@ -833,7 +833,7 @@ func (p *GetAccountRequest) Field1DeepEqual(src int64) bool {
 }
 
 type GetAccountResponse struct {
-	Account  *Account       `thrift:"Account,1,required" frugal:"1,required,Account" json:"Account"`
+	Account  *Account       `thrift:"Account,1,optional" frugal:"1,optional,Account" json:"Account,omitempty"`
 	BaseResp *base.BaseResp `thrift:"BaseResp,255,required" frugal:"255,required,base.BaseResp" json:"BaseResp"`
 }
 
@@ -886,7 +886,6 @@ func (p *GetAccountResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetAccount bool = false
 	var issetBaseResp bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -908,7 +907,6 @@ func (p *GetAccountResponse) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetAccount = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -932,11 +930,6 @@ func (p *GetAccountResponse) Read(iprot thrift.TProtocol) (err error) {
 	}
 	if err = iprot.ReadStructEnd(); err != nil {
 		goto ReadStructEndError
-	}
-
-	if !issetAccount {
-		fieldId = 1
-		goto RequiredFieldNotSetError
 	}
 
 	if !issetBaseResp {
@@ -1009,14 +1002,16 @@ WriteStructEndError:
 }
 
 func (p *GetAccountResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Account", thrift.STRUCT, 1); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := p.Account.Write(oprot); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
+	if p.IsSetAccount() {
+		if err = oprot.WriteFieldBegin("Account", thrift.STRUCT, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Account.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
 	}
 	return nil
 WriteFieldBeginError:

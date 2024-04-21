@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	payment_system "github.com/acblacktea/payment_system/payment_system/kitex_gen/acblacktea/payment_system/payment_system"
+	"github.com/acblacktea/payment_system/payment_system/kitex_gen/base"
 	payment_system_service "github.com/acblacktea/payment_system/payment_system/service/payment_system"
 	"github.com/acblacktea/payment_system/payment_system/util"
 )
@@ -17,24 +19,24 @@ type PaymentSystemImpl struct {
 func (s *PaymentSystemImpl) CreateAccount(ctx context.Context, req *payment_system.CreateAccountRequest) (resp *payment_system.CreateAccountResponse, err error) {
 	if req.Account == nil {
 		return &payment_system.CreateAccountResponse{
-			BaseResp: &payment_system.BaseResp{
+			BaseResp: &base.BaseResp{
 				StatusMessage: util.ErrInvalidRequest.Error(),
-				StatusCode:    util.InternalErrCode,
+				StatusCode:    util.InvalidArgument,
 			},
-		}, util.ErrInvalidRequest
+		}, nil
 	}
 
 	if err := s.PaymentSystemService.CreateAccount(ctx, req.Account.AccountID, req.Account.Balance, req.Account.Currency); err != nil {
 		return &payment_system.CreateAccountResponse{
-			BaseResp: &payment_system.BaseResp{
+			BaseResp: &base.BaseResp{
 				StatusMessage: err.Error(),
 				StatusCode:    util.InternalErrCode,
 			},
-		}, err
+		}, nil
 	}
 
 	return &payment_system.CreateAccountResponse{
-		BaseResp: &payment_system.BaseResp{
+		BaseResp: &base.BaseResp{
 			StatusCode: util.SuccessCode,
 		},
 	}, nil
@@ -44,16 +46,17 @@ func (s *PaymentSystemImpl) CreateAccount(ctx context.Context, req *payment_syst
 func (s *PaymentSystemImpl) GetAccount(ctx context.Context, req *payment_system.GetAccountRequest) (resp *payment_system.GetAccountResponse, err error) {
 	account, err := s.PaymentSystemService.GetAccount(ctx, req.AccountID)
 	if err != nil {
+		fmt.Printf("%v\n", err)
 		return &payment_system.GetAccountResponse{
-			BaseResp: &payment_system.BaseResp{
+			BaseResp: &base.BaseResp{
 				StatusMessage: err.Error(),
 				StatusCode:    util.InternalErrCode,
 			},
-		}, err
+		}, nil
 	}
 
 	return &payment_system.GetAccountResponse{
-		BaseResp: &payment_system.BaseResp{
+		BaseResp: &base.BaseResp{
 			StatusCode: util.SuccessCode,
 		},
 		Account: &payment_system.Account{
@@ -68,15 +71,15 @@ func (s *PaymentSystemImpl) GetAccount(ctx context.Context, req *payment_system.
 func (s *PaymentSystemImpl) SubmitTransaction(ctx context.Context, req *payment_system.SubimitTransactionRequest) (resp *payment_system.SubimitTransactionResponse, err error) {
 	if err := s.PaymentSystemService.SubmitTransaction(ctx, req.SourceAccountID, req.DestinationAccountID, req.Amount); err != nil {
 		return &payment_system.SubimitTransactionResponse{
-			BaseResp: &payment_system.BaseResp{
+			BaseResp: &base.BaseResp{
 				StatusMessage: err.Error(),
 				StatusCode:    util.InternalErrCode,
 			},
-		}, err
+		}, nil
 	}
 
 	return &payment_system.SubimitTransactionResponse{
-		BaseResp: &payment_system.BaseResp{
+		BaseResp: &base.BaseResp{
 			StatusCode: util.SuccessCode,
 		},
 	}, nil

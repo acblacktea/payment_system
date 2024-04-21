@@ -10,8 +10,8 @@ import (
 )
 
 type Account struct {
-	AccountID int64   `thrift:"AccountID,1,required" form:"AccountID,required" json:"AccountID,required" query:"AccountID,required"`
-	Balance   float64 `thrift:"Balance,2,required" form:"Balance,required" json:"Balance,required" query:"Balance,required"`
+	AccountID int64   `thrift:"account_id,1,required" form:"account_id,required" json:"account_id,required" query:"account_id,required"`
+	Balance   float64 `thrift:"balance,2,required" form:"balance,required" json:"balance,required" query:"balance,required"`
 	Currency  string  `thrift:"currency,3,required" form:"currency,required" json:"currency,required" query:"currency,required"`
 }
 
@@ -32,8 +32,8 @@ func (p *Account) GetCurrency() (v string) {
 }
 
 var fieldIDToName_Account = map[int16]string{
-	1: "AccountID",
-	2: "Balance",
+	1: "account_id",
+	2: "balance",
 	3: "currency",
 }
 
@@ -196,7 +196,7 @@ WriteStructEndError:
 }
 
 func (p *Account) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("AccountID", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("account_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.AccountID); err != nil {
@@ -213,7 +213,7 @@ WriteFieldEndError:
 }
 
 func (p *Account) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Balance", thrift.DOUBLE, 2); err != nil {
+	if err = oprot.WriteFieldBegin("balance", thrift.DOUBLE, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteDouble(p.Balance); err != nil {
@@ -255,9 +255,9 @@ func (p *Account) String() string {
 }
 
 type CreateAccountRequest struct {
-	AccountID int64   `thrift:"AccountID,1,required" form:"account_id,required" json:"AccountID,required"`
-	Balance   float64 `thrift:"Balance,2,required" form:"balance,required" json:"Balance,required"`
-	Currency  string  `thrift:"Currency,3,required" form:"currency,required" json:"Currency,required"`
+	AccountID int64   `thrift:"account_id,1,required" form:"account_id,required" json:"account_id,required"`
+	Balance   float64 `thrift:"balance,2,required" form:"balance,required" json:"balance,required"`
+	Currency  string  `thrift:"currency,3,required" form:"currency,required" json:"currency,required"`
 }
 
 func NewCreateAccountRequest() *CreateAccountRequest {
@@ -277,9 +277,9 @@ func (p *CreateAccountRequest) GetCurrency() (v string) {
 }
 
 var fieldIDToName_CreateAccountRequest = map[int16]string{
-	1: "AccountID",
-	2: "Balance",
-	3: "Currency",
+	1: "account_id",
+	2: "balance",
+	3: "currency",
 }
 
 func (p *CreateAccountRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -441,7 +441,7 @@ WriteStructEndError:
 }
 
 func (p *CreateAccountRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("AccountID", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("account_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.AccountID); err != nil {
@@ -458,7 +458,7 @@ WriteFieldEndError:
 }
 
 func (p *CreateAccountRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Balance", thrift.DOUBLE, 2); err != nil {
+	if err = oprot.WriteFieldBegin("balance", thrift.DOUBLE, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteDouble(p.Balance); err != nil {
@@ -475,7 +475,7 @@ WriteFieldEndError:
 }
 
 func (p *CreateAccountRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Currency", thrift.STRING, 3); err != nil {
+	if err = oprot.WriteFieldBegin("currency", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.Currency); err != nil {
@@ -650,7 +650,7 @@ func (p *CreateAccountResponse) String() string {
 }
 
 type GetAccountRequest struct {
-	AccountID int64 `thrift:"AccountID,1,required" json:"AccountID,required" query:"account_id,required"`
+	AccountID int64 `thrift:"account_id,1,required" json:"account_id,required" query:"account_id,required"`
 }
 
 func NewGetAccountRequest() *GetAccountRequest {
@@ -662,7 +662,7 @@ func (p *GetAccountRequest) GetAccountID() (v int64) {
 }
 
 var fieldIDToName_GetAccountRequest = map[int16]string{
-	1: "AccountID",
+	1: "account_id",
 }
 
 func (p *GetAccountRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -768,7 +768,7 @@ WriteStructEndError:
 }
 
 func (p *GetAccountRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("AccountID", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("account_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.AccountID); err != nil {
@@ -793,7 +793,7 @@ func (p *GetAccountRequest) String() string {
 }
 
 type GetAccountResponse struct {
-	Account  *Account       `thrift:"Account,1,required" form:"Account,required" json:"Account,required" query:"Account,required"`
+	Account  *Account       `thrift:"account,1,required" form:"account,required" json:"account,required" query:"account,required"`
 	BaseResp *base.BaseResp `thrift:"BaseResp,255,required" form:"BaseResp,required" json:"BaseResp,required" query:"BaseResp,required"`
 }
 
@@ -820,7 +820,7 @@ func (p *GetAccountResponse) GetBaseResp() (v *base.BaseResp) {
 }
 
 var fieldIDToName_GetAccountResponse = map[int16]string{
-	1:   "Account",
+	1:   "account",
 	255: "BaseResp",
 }
 
@@ -959,7 +959,7 @@ WriteStructEndError:
 }
 
 func (p *GetAccountResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Account", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("account", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.Account.Write(oprot); err != nil {
@@ -1001,9 +1001,9 @@ func (p *GetAccountResponse) String() string {
 }
 
 type SubimitTransactionRequest struct {
-	SourceAccountID      int64   `thrift:"SourceAccountID,1,required" form:"source_account_id,required" json:"SourceAccountID,required"`
-	DestinationAccountID int64   `thrift:"DestinationAccountID,2,required" form:"destination_account_id,required" json:"DestinationAccountID,required"`
-	Amount               float64 `thrift:"Amount,3,required" form:"amount,required" json:"Amount,required"`
+	SourceAccountID      int64   `thrift:"source_account_id,1,required" form:"source_account_id,required" json:"source_account_id,required"`
+	DestinationAccountID int64   `thrift:"destination_account_id,2,required" form:"destination_account_id,required" json:"destination_account_id,required"`
+	Amount               float64 `thrift:"amount,3,required" form:"amount,required" json:"amount,required"`
 }
 
 func NewSubimitTransactionRequest() *SubimitTransactionRequest {
@@ -1023,9 +1023,9 @@ func (p *SubimitTransactionRequest) GetAmount() (v float64) {
 }
 
 var fieldIDToName_SubimitTransactionRequest = map[int16]string{
-	1: "SourceAccountID",
-	2: "DestinationAccountID",
-	3: "Amount",
+	1: "source_account_id",
+	2: "destination_account_id",
+	3: "amount",
 }
 
 func (p *SubimitTransactionRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1187,7 +1187,7 @@ WriteStructEndError:
 }
 
 func (p *SubimitTransactionRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("SourceAccountID", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("source_account_id", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.SourceAccountID); err != nil {
@@ -1204,7 +1204,7 @@ WriteFieldEndError:
 }
 
 func (p *SubimitTransactionRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("DestinationAccountID", thrift.I64, 2); err != nil {
+	if err = oprot.WriteFieldBegin("destination_account_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteI64(p.DestinationAccountID); err != nil {
@@ -1221,7 +1221,7 @@ WriteFieldEndError:
 }
 
 func (p *SubimitTransactionRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Amount", thrift.DOUBLE, 3); err != nil {
+	if err = oprot.WriteFieldBegin("amount", thrift.DOUBLE, 3); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteDouble(p.Amount); err != nil {

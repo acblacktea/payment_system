@@ -21,7 +21,7 @@ struct GetAccountRequest {
 }
 
 struct GetAccountResponse {
-    1: required Account Account,
+    1: optional Account Account,
 
     255: required base.BaseResp BaseResp,
 }

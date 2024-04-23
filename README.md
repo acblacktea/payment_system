@@ -71,6 +71,8 @@ curl --location 'http://127.0.0.1:8888/transactions' \
 ![](Images/example4.png)
 
 ## Database
+### isolation level: SERIALIZABLE
+
 ### wallet table: save account info
 ```
 CREATE TABLE `Wallet` (

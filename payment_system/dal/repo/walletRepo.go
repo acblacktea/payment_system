@@ -13,7 +13,7 @@ import (
 type WalletRepo interface {
 	CreateAccount(ctx context.Context, accountID, initBalance int64, currency string) error
 	GetAccounts(ctx context.Context, accountIDs []int64) ([]*model.Wallet, error)
-	SubmitTransaction(ctx context.Context, params SubmitTransactionParameters) error
+	SubmitTransaction(ctx context.Context, sourceAccountID, destinationAccountID int64, amount float64) error
 }
 
 type WalletRepoImpl struct {
@@ -45,29 +45,53 @@ func (r *WalletRepoImpl) GetAccounts(ctx context.Context, accountIDs []int64) ([
 	return wallets, result.Error
 }
 
-type SubmitTransactionParameters struct {
-	SourceAccountID      int64
-	DestinationAccountID int64
-	SourceBalance        int64
-	DestinationBalance   int64
-	Amount               int64
-	Currency             string
-}
-
-func (r *WalletRepoImpl) SubmitTransaction(ctx context.Context, params SubmitTransactionParameters) error {
+func (r *WalletRepoImpl) SubmitTransaction(ctx context.Context, sourceAccountID, destinationAccountID int64, amount float64) error {
 	return r.dbClient.Transaction(func(tx *gorm.DB) error {
-		if err := r.updateAccount(ctx, params.SourceAccountID, params.SourceBalance, tx); err != nil {
-			log.Printf("update account error account id %d balance %d, err %s\n", params.SourceAccountID, params.SourceBalance, err.Error())
+		wallets, err := r.GetAccounts(ctx, []int64{sourceAccountID, destinationAccountID})
+		if err != nil {
 			return err
 		}
 
-		if err := r.updateAccount(ctx, params.DestinationAccountID, params.DestinationBalance, tx); err != nil {
-			log.Printf("update account error account id %d balance %d, err %s\n", params.DestinationAccountID, params.DestinationBalance, err.Error())
+		if len(wallets) < 2 {
+			return util.ErrAccountIDNotExist
+		}
+
+		var sourceAccount, destinationAccount *model.Wallet
+		for _, wallet := range wallets {
+			if wallet.ID == sourceAccountID {
+				sourceAccount = wallet
+			} else {
+				destinationAccount = wallet
+			}
+		}
+
+		if sourceAccount.Currency != destinationAccount.Currency {
+			return util.ErrCurrencyTypeMismatch
+		}
+
+		amountIntValue, err := util.ConvertMoneyToIntegerMoney(amount, sourceAccount.Currency)
+		if err != nil {
 			return err
 		}
 
-		if err := r.insertTranslation(ctx, params.SourceAccountID, params.DestinationAccountID, params.Amount, tx); err != nil {
-			log.Printf("update account error account id %d balance %d\n", params.DestinationAccountID, params.DestinationBalance)
+		if sourceAccount.Balance < amountIntValue {
+			return util.ErrBalanceNotEnough
+		}
+
+		sourceAccount.Balance -= amountIntValue
+		if err := r.updateAccount(ctx, sourceAccount.ID, sourceAccount.Balance, tx); err != nil {
+			log.Printf("update account error account id %d balance %d, err %s\n", sourceAccount.ID, sourceAccount.Balance, err.Error())
+			return err
+		}
+
+		destinationAccount.Balance += amountIntValue
+		if err := r.updateAccount(ctx, destinationAccount.ID, destinationAccount.Balance, tx); err != nil {
+			log.Printf("update account error account id %d balance %d, err %s\n", destinationAccount.ID, destinationAccount.Balance, err.Error())
+			return err
+		}
+
+		if err := r.insertTranslation(ctx, sourceAccountID, destinationAccountID, amountIntValue, tx); err != nil {
+			log.Printf("insert translation error account id %d %d balance %f\n", sourceAccountID, destinationAccountID, amount)
 			return err
 		}
 		// return nil will commit the whole transaction

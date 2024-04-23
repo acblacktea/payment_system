@@ -16,7 +16,7 @@ func (s *WalletServiceImpl) GetAccount(ctx context.Context, accountID int64) (*W
 		return nil, util.ErrAccountIDNotExist
 	}
 
-	balanceIntValue, err := convertIntegerMoneyToMoney(wallets[0].Balance, wallets[0].Currency)
+	balanceIntValue, err := util.ConvertIntegerMoneyToMoney(wallets[0].Balance, wallets[0].Currency)
 	if err != nil {
 		return nil, err
 	}

@@ -13,7 +13,7 @@ func (s *WalletServiceImpl) CreateAccount(ctx context.Context, accountID int64, 
 		return util.ErrInvalidMoneyValue
 	}
 
-	balance, err := convertMoneyToIntegerMoney(initBalance, currency)
+	balance, err := util.ConvertMoneyToIntegerMoney(initBalance, currency)
 	if err != nil {
 		return err
 	}

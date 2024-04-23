@@ -123,6 +123,7 @@ func SubmitTransaction(ctx context.Context, c *app.RequestContext) { //ignore_se
 		return
 	}
 
+	fmt.Printf("%f\n", req.Amount)
 	rpcResp, err := client.SubmitTransaction(ctx, &payment_system.SubimitTransactionRequest{
 		DestinationAccountID: req.DestinationAccountID,
 		SourceAccountID:      req.SourceAccountID,

@@ -69,6 +69,7 @@ func (s *PaymentSystemImpl) GetAccount(ctx context.Context, req *payment_system.
 
 // SubmitTransaction implements the PaymentSystemImpl interface.
 func (s *PaymentSystemImpl) SubmitTransaction(ctx context.Context, req *payment_system.SubimitTransactionRequest) (resp *payment_system.SubimitTransactionResponse, err error) {
+	fmt.Printf("%f\n", req.Amount)
 	if err := s.PaymentSystemService.SubmitTransaction(ctx, req.SourceAccountID, req.DestinationAccountID, req.Amount); err != nil {
 		return &payment_system.SubimitTransactionResponse{
 			BaseResp: &base.BaseResp{
